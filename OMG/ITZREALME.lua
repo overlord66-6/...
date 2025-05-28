@@ -175,6 +175,13 @@ ToggleNoClip:OnChanged(function()
     end
 end)
 
+Tabs.Main:CreateParagraph("Aligned Paragraph", {
+    Title = "---Auto Lift/Punch---",
+    Content = "",
+    TitleAlignment = "Middle",
+    ContentAlignment = Enum.TextXAlignment.Center
+})
+
 local player = game:GetService("Players").LocalPlayer
 
 local ToggleAutoLift = Tabs.Main:AddToggle("MyToggle_AutoLift", {Title = "Auto Lift", Default = false})
@@ -189,9 +196,36 @@ ToggleAutoLift:OnChanged(function()
     end
 end)
 
+-- Auto Punch Toggle
+
+local Toggle_Apunch = Tabs.Main:CreateToggle("AutoPunch", {
+    Title = "Auto Punch",
+    Default = false
+})
+
+Options.AutoPunch:SetValue(false)
+
+local autoPunchRunning = false
+
+Toggle_Apunch:OnChanged(function()
+    autoPunchRunning = Options.AutoPunch.Value
+
+    task.spawn(function()
+        while autoPunchRunning do
+            -- Replace this with your actual punching logic
+            print("Punch!")
+
+            -- Example:
+            -- game:GetService("ReplicatedStorage").Remotes.Punch:FireServer()
+
+            task.wait(0.1) -- adjust timing as needed
+        end
+    end)
+end)
+
 Options.MyToggle_AutoLift:SetValue(false)
 
-Tabs.Home:CreateParagraph("Aligned Paragraph", {
+Tabs.Main:CreateParagraph("Aligned Paragraph", {
     Title = "---Auto Equip---",
     Content = "",
     TitleAlignment = "Middle",
@@ -233,6 +267,13 @@ ToggleWeight:OnChanged(function()
 end)
 
 Options.AutoWeight:SetValue(false)
+
+Tabs.Main:CreateParagraph("Aligned Paragraph", {
+    Title = "---Faster Tools---",
+    Content = "",
+    TitleAlignment = "Middle",
+    ContentAlignment = Enum.TextXAlignment.Center
+})
 
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
