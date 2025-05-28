@@ -191,6 +191,17 @@ end)
 
 Options.MyToggle_AutoLift:SetValue(false)
 
+local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
+    Title = "Language",
+    Content = [[
+Current Script Language: English
+
+The script is written entirely in English for ease of use and clarity. All labels, buttons, and descriptions are in English so it’s easy for everyone to understand and use right away.
+
+Our Discord server also supports German and Spanish! If English isn’t your main language, feel free to hop in and get help, updates, and support in your native tongue.
+]]
+})
+
 local Paragraph_PlayTime = Tabs.Status:CreateParagraph("Paragraph_PlayTime", {
     Title = "Time in Server",
     Content = "Calculating..."
