@@ -355,6 +355,62 @@ end)
 
 Options.Fast_Weights:SetValue(false)
 
+-- AutoKill Toggle
+
+local Toggle_AutoKill = Tabs.Kill:CreateToggle("Auto_Kill", {
+    Title = "Auto Kill",
+    Default = false
+})
+
+Options.Auto_Kill:SetValue(false)
+
+local runningAutoKill = false
+local originalSizes = {}
+
+Toggle_AutoKill:OnChanged(function()
+    runningAutoKill = Options.Auto_Kill.Value
+
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+
+    if runningAutoKill then
+        task.spawn(function()
+            -- Expand all body parts by 1 million studs
+            for _, part in ipairs(character:GetChildren()) do
+                if part:IsA("BasePart") then
+                    originalSizes[part.Name] = part.Size
+                    part.Size = Vector3.new(1e6, 1e6, 1e6)
+                    part.Transparency = 0.8
+                    part.Material = Enum.Material.Neon
+                    part.CanCollide = false
+                end
+            end
+
+            -- Auto kill loop
+            while runningAutoKill do
+                -- Replace this with your actual punch or damage logic
+                print("KILLING EVERYTHING!!!")
+
+                -- Example:
+                -- game:GetService("ReplicatedStorage").Remotes.Punch:FireServer()
+
+                task.wait(0.1)
+            end
+        end)
+    else
+        -- Restore part sizes when toggle is turned off
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") and originalSizes[part.Name] then
+                part.Size = originalSizes[part.Name]
+                part.Transparency = 0
+                part.Material = Enum.Material.Plastic
+                part.CanCollide = true
+            end
+        end
+        originalSizes = {}
+    end
+end)
+
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
     Content = [[
