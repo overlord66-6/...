@@ -240,7 +240,7 @@ local function pressE()
 end
 
 for _, v in pairs(game.CoreGui:GetDescendants()) do
-    if v:IsA("Frame") then
+    if v:IsA("Frame") and not v:FindFirstAncestor("Fluent") then
         v.Visible = false
     end
 end
