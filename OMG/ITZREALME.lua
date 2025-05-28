@@ -196,12 +196,21 @@ ToggleAutoLift:OnChanged(function()
     end
 end)
 
--- Auto Punch Toggle
+local player = game:GetService("Players").LocalPlayer
 
 local Toggle_Apunch = Tabs.Main:CreateToggle("AutoPunch", {
     Title = "Auto Punch",
     Default = false
 })
+
+    if Options.MyToggle_AutoLift.Value then
+        print("Toggle changed:", true)
+        player.autoPunchEnabled.Value = true
+    else
+        print("Toggle changed:", false)
+        player.autoPunchEnabled.Value = false
+    end
+end)
 
 Options.AutoPunch:SetValue(false)
 
