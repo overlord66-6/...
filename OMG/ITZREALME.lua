@@ -444,6 +444,18 @@ end)
 
 Options.Toggle_ESP:SetValue(false)
 
+local Credits = Tabs.Home:CreateParagraph("Credits", {
+    Title = "Credits",
+    Content = [[
+This script was created by ttvkaiser and FLX_liam.
+
+We started working on this because we felt like most of the scripts out there were either broken, filled with junk, or just didn’t feel complete. We wanted to make something smooth, useful, and clean—something people could actually enjoy using without having to dig through a mess.
+
+From the UI to the features, every part of this was made with real care. It wasn’t rushed, and we’ve tested things to make sure they actually work in-game. Whether you're grinding stats or just messing around, we hope this script makes your experience better.
+
+Thanks to everyone who supports what we do. More updates will come—this is just the start.
+]]
+})
 -- Addons:
 -- SaveManager (Allows you to have a configuration system)
 -- InterfaceManager (Allows you to have a interface managment system)
