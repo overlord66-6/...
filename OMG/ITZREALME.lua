@@ -191,6 +191,99 @@ end)
 
 Options.MyToggle_AutoLift:SetValue(false)
 
+local player = game.Players.LocalPlayer
+local muscleEvent = player:WaitForChild("muscleEvent")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local ToggleFastRebirth = Tabs.Rebirth:CreateToggle("Toggle_FastRebirth", {
+    Title = "Fast Rebirths",
+    Default = false
+})
+
+local function unequipPets()
+    for _, folder in pairs(player.petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in pairs(folder:GetChildren()) do
+                replicatedStorage.rEvents.equipPetEvent:FireServer("unequipPet", pet)
+            end
+        end
+    end
+    task.wait(0.1)
+end
+
+local function equipPetsByName(name)
+    unequipPets()
+    task.wait(0.01)
+    for _, pet in pairs(player.petsFolder.Unique:GetChildren()) do
+        if pet.Name == name then
+            replicatedStorage.rEvents.equipPetEvent:FireServer("equipPet", pet)
+        end
+    end
+end
+
+local function getJungleBarLiftSeat()
+    local machines = workspace:FindFirstChild("machinesFolder")
+    if machines then
+        local lift = machines:FindFirstChild("Jungle Bar Lift")
+        if lift then
+            return lift:FindFirstChild("interactSeat")
+        end
+    end
+    return nil
+end
+
+local function pressE()
+    local vim = game:GetService("VirtualInputManager")
+    vim:SendKeyEvent(true, "E", false, game)
+    task.wait(0.05)
+    vim:SendKeyEvent(false, "E", false, game)
+end
+
+for _, v in pairs(game.CoreGui:GetDescendants()) do
+    if v:IsA("Frame") then
+        v.Visible = false
+    end
+end
+
+local function fastTrainAndRebirthLoop()
+    while Options.Toggle_FastRebirth.Value do
+        equipPetsByName("Swift Samurai")
+        local rebirths = player.leaderstats.Rebirths.Value
+        local strengthTarget = 10000 + (rebirths * 5000)
+        if player.ultimatesFolder:FindFirstChild("Golden Rebirth") then
+            local golden = player.ultimatesFolder["Golden Rebirth"].Value
+            strengthTarget = math.floor(strengthTarget * (1 - (golden * 0.1)))
+        end
+        local seat = getJungleBarLiftSeat()
+        if seat then
+            player.Character.HumanoidRootPart.CFrame = seat.CFrame * CFrame.new(0, 3, 0)
+            repeat task.wait(0.1) pressE() until player.Character.Humanoid.Sit
+        end
+        while player.leaderstats.Strength.Value < strengthTarget and Options.Toggle_FastRebirth.Value do
+            for _ = 1, 10 do
+                muscleEvent:FireServer("rep")
+            end
+            task.wait(0.01)
+        end
+        equipPetsByName("Tribal Overlord")
+        task.wait(0.2)
+        local before = player.leaderstats.Rebirths.Value
+        repeat
+            replicatedStorage.rEvents.rebirthRemote:InvokeServer("rebirthRequest")
+            task.wait(0.1)
+        until player.leaderstats.Rebirths.Value > before or not Options.Toggle_FastRebirth.Value
+        task.wait(0.5)
+    end
+end
+
+ToggleFastRebirth:OnChanged(function()
+    if Options.Toggle_FastRebirth.Value then
+        task.spawn(fastTrainAndRebirthLoop)
+    end
+end)
+
+Options.Toggle_FastRebirth:SetValue(false)
+
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
     Content = [[
