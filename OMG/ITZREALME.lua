@@ -444,7 +444,7 @@ end)
 
 Options.Toggle_ESP:SetValue(false)
 
-local Credits = Tabs.Home:CreateParagraph("Credits", {
+local Credits = Tabs.Credits:CreateParagraph("Credits", {
     Title = "Credits",
     Content = [[
 This script was created by ttvkaiser and FLX_liam.
