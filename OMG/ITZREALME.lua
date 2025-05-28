@@ -477,6 +477,13 @@ Toggle_LockPos:OnChanged(function()
     end
 end)
 
+Tabs.Rebirth:CreateParagraph("Aligned Paragraph", {
+    Title = "---About Rebirths---",
+    Content = "The Dragon Hub rebirths are in the paid version. Pay 5$ in the discord or get 3 invites to our server!!!",
+    TitleAlignment = "Middle",
+    ContentAlignment = Enum.TextXAlignment.Center
+})
+
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
     Content = [[
