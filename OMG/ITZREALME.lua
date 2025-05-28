@@ -355,6 +355,13 @@ end)
 
 Options.Fast_Weights:SetValue(false)
 
+Tabs.Main:CreateParagraph("Aligned Paragraph", {
+    Title = "---Auto Kill---",
+    Content = "Make SURE YOU USE LOCK POSTION OR IT WON'T WORK!!!",
+    TitleAlignment = "Middle",
+    ContentAlignment = Enum.TextXAlignment.Center
+})
+
 -- AutoKill Toggle
 
 local Toggle_AutoKill = Tabs.Kill:CreateToggle("Auto_Kill", {
@@ -427,6 +434,46 @@ Toggle_AutoKill:OnChanged(function()
             end
         end
         originalSizes = {}
+    end
+end)
+
+-- Lock Position Toggle
+
+local Toggle_LockPos = Tabs.Kill:CreateToggle("Lock_Position", {
+    Title = "Lock Position",
+    Default = false
+})
+
+Options.Lock_Position:SetValue(false)
+
+local runningLockPos = false
+local storedCFrame = nil
+local lockConnection = nil
+
+Toggle_LockPos:OnChanged(function()
+    runningLockPos = Options.Lock_Position.Value
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+
+    if runningLockPos and rootPart then
+        storedCFrame = rootPart.CFrame
+
+        -- Freeze character in place
+        lockConnection = game:GetService("RunService").RenderStepped:Connect(function()
+            if rootPart and runningLockPos then
+                rootPart.Velocity = Vector3.zero
+                rootPart.RotVelocity = Vector3.zero
+                rootPart.CFrame = storedCFrame
+            end
+        end)
+
+        print("Position locked!")
+    elseif not runningLockPos and lockConnection then
+        -- Unlock and disconnect
+        lockConnection:Disconnect()
+        lockConnection = nil
+        print("Position unlocked!")
     end
 end)
 
