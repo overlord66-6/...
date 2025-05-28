@@ -355,9 +355,9 @@ end)
 
 Options.Fast_Weights:SetValue(false)
 
--- Auto Kill Toggle
+-- AutoKill Toggle
 
-local Toggle_AutoKill = Tabs.Main:CreateToggle("Auto_Kill", {
+local Toggle_AutoKill = Tabs.Kill:CreateToggle("Auto_Kill", {
     Title = "Auto Kill",
     Default = false
 })
@@ -365,65 +365,68 @@ local Toggle_AutoKill = Tabs.Main:CreateToggle("Auto_Kill", {
 Options.Auto_Kill:SetValue(false)
 
 local runningAutoKill = false
-local fakeClones = {}
+local originalSizes = {}
 
 Toggle_AutoKill:OnChanged(function()
     runningAutoKill = Options.Auto_Kill.Value
+
     local player = game.Players.LocalPlayer
-    local char = player.Character or player.CharacterAdded:Wait()
-    local rightHand = char:FindFirstChild("RightHand") or char:FindFirstChild("Right Arm")
+    local character = player.Character or player.CharacterAdded:Wait()
 
-    if runningAutoKill and rightHand then
-        -- Create fake clones of other players and attach them to your hand
-        for _, targetPlayer in ipairs(game.Players:GetPlayers()) do
-            if targetPlayer ~= player and targetPlayer.Character then
-                local targetChar = targetPlayer.Character:Clone()
-                targetChar.Name = "Fake_" .. targetPlayer.Name
-                targetChar.Parent = workspace
-
-                -- Remove humanoid and any scripts to avoid movement
-                local hum = targetChar:FindFirstChild("Humanoid")
-                if hum then hum:Destroy() end
-
-                -- Weld all parts to the hand
-                for _, part in ipairs(targetChar:GetChildren()) do
-                    if part:IsA("BasePart") then
-                        part.Anchored = false
-                        part.CanCollide = false
-                        part.Material = Enum.Material.Neon
-                        part.Transparency = 0.5
-
-                        local weld = Instance.new("WeldConstraint")
-                        weld.Part0 = part
-                        weld.Part1 = rightHand
-                        weld.Parent = part
-                    end
-                end
-
-                table.insert(fakeClones, targetChar)
-            end
-        end
-
-        -- Start auto kill loop
+    if runningAutoKill then
         task.spawn(function()
-            while runningAutoKill do
-                print("Auto Kill triggered!")
+            for _, part in ipairs(character:GetChildren()) do
+                if part:IsA("BasePart") then
+                    originalSizes[part.Name] = part.Size
+                    
+                    -- CLIENT-SIDE VISUAL FIX
+                    if player == game.Players.LocalPlayer then
+                        -- Make you appear normal on your own screen
+                        part.Size = Vector3.new(2, 2, 1)
+                        part.Transparency = 0
+                        part.Material = Enum.Material.Plastic
+                    end
 
-                -- Replace with your actual punch/kill logic here:
+                    -- SERVER HITBOX EXPANSION
+                    part:GetPropertyChangedSignal("Size"):Connect(function()
+                        -- Force server to see giant size
+                        if runningAutoKill then
+                            part.Size = Vector3.new(1e6, 1e6, 1e6)
+                            part.Transparency = 0.8
+                            part.Material = Enum.Material.Neon
+                            part.CanCollide = false
+                        end
+                    end)
+
+                    -- Trigger immediately
+                    part.Size = Vector3.new(1e6, 1e6, 1e6)
+                    part.Transparency = 0.8
+                    part.Material = Enum.Material.Neon
+                    part.CanCollide = false
+                end
+            end
+
+            -- Auto punch loop
+            while runningAutoKill do
+                print("KILLING EVERYTHING!!!")
+
+                -- Replace with your actual RemoteEvent logic
                 -- game:GetService("ReplicatedStorage").Remotes.Punch:FireServer()
 
                 task.wait(0.1)
             end
         end)
-
-    elseif not runningAutoKill then
-        -- Clean up fake clones
-        for _, clone in ipairs(fakeClones) do
-            if clone and clone.Parent then
-                clone:Destroy()
+    else
+        -- Restore parts to original size
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") and originalSizes[part.Name] then
+                part.Size = originalSizes[part.Name]
+                part.Transparency = 0
+                part.Material = Enum.Material.Plastic
+                part.CanCollide = true
             end
         end
-        fakeClones = {}
+        originalSizes = {}
     end
 end)
 
