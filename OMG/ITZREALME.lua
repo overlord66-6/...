@@ -355,7 +355,7 @@ end)
 
 Options.Fast_Weights:SetValue(false)
 
-Tabs.Main:CreateParagraph("Aligned Paragraph", {
+Tabs.Kill:CreateParagraph("Aligned Paragraph", {
     Title = "---Auto Kill---",
     Content = "Make SURE YOU USE LOCK POSTION OR IT WON'T WORK!!!",
     TitleAlignment = "Middle",
