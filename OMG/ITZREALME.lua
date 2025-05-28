@@ -275,6 +275,86 @@ Tabs.Main:CreateParagraph("Aligned Paragraph", {
     ContentAlignment = Enum.TextXAlignment.Center
 })
 
+-- Fast Punch Toggle
+local Toggle_FastPunch = Tabs.Main:CreateToggle("Fast_Punch", {
+    Title = "Fast Punch",
+    Default = false
+})
+
+local runningFastPunch = false
+Toggle_FastPunch:OnChanged(function()
+    runningFastPunch = Options.Fast_Punch.Value
+    task.spawn(function()
+        while runningFastPunch do
+            print("Fast Punch!")
+            -- game:GetService("ReplicatedStorage").Remotes.Punch:FireServer()
+            task.wait(0.1) -- Adjust speed
+        end
+    end)
+end)
+
+Options.Fast_Punch:SetValue(false)
+
+-- Fast Pushup Toggle
+local Toggle_FastPushup = Tabs.Main:CreateToggle("Fast_Pushup", {
+    Title = "Fast Pushup",
+    Default = false
+})
+
+local runningFastPushup = false
+Toggle_FastPushup:OnChanged(function()
+    runningFastPushup = Options.Fast_Pushup.Value
+    task.spawn(function()
+        while runningFastPushup do
+            print("Fast Pushup!")
+            -- Insert pushup logic here
+            task.wait(0.1)
+        end
+    end)
+end)
+
+Options.Fast_Pushup:SetValue(false)
+
+-- Fast Situps Toggle
+local Toggle_FastSitups = Tabs.Main:CreateToggle("Fast_Situps", {
+    Title = "Fast Situps",
+    Default = false
+})
+
+local runningFastSitups = false
+Toggle_FastSitups:OnChanged(function()
+    runningFastSitups = Options.Fast_Situps.Value
+    task.spawn(function()
+        while runningFastSitups do
+            print("Fast Situps!")
+            -- Insert situps logic here
+            task.wait(0.1)
+        end
+    end)
+end)
+
+Options.Fast_Situps:SetValue(false)
+
+-- Fast Weights Toggle
+local Toggle_FastWeights = Tabs.Main:CreateToggle("Fast_Weights", {
+    Title = "Fast Weights",
+    Default = false
+})
+
+local runningFastWeights = false
+Toggle_FastWeights:OnChanged(function()
+    runningFastWeights = Options.Fast_Weights.Value
+    task.spawn(function()
+        while runningFastWeights do
+            print("Fast Weights!")
+            -- Insert weights logic here
+            task.wait(0.1)
+        end
+    end)
+end)
+
+Options.Fast_Weights:SetValue(false)
+
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
     Content = [[
