@@ -191,6 +191,49 @@ end)
 
 Options.MyToggle_AutoLift:SetValue(false)
 
+Tabs.Home:CreateParagraph("Aligned Paragraph", {
+    Title = "---Auto Equip---",
+    Content = "",
+    TitleAlignment = "Middle",
+    ContentAlignment = Enum.TextXAlignment.Center
+})
+
+local TogglePunch = Tabs.Main:CreateToggle("AutoPunch", {Title = "Auto Equip: Punch", Default = false})
+
+TogglePunch:OnChanged(function()
+    print("Auto Punch toggle changed:", Options.AutoPunch.Value)
+    -- Add your punch equip logic here
+end)
+
+Options.AutoPunch:SetValue(false)
+
+local TogglePushup = Tabs.Main:CreateToggle("AutoPushup", {Title = "Auto Equip: Pushup", Default = false})
+
+TogglePushup:OnChanged(function()
+    print("Auto Pushup toggle changed:", Options.AutoPushup.Value)
+    -- Add your pushup equip logic here
+end)
+
+Options.AutoPushup:SetValue(false)
+
+local ToggleSitup = Tabs.Main:CreateToggle("AutoSitup", {Title = "Auto Equip: Situp", Default = false})
+
+ToggleSitup:OnChanged(function()
+    print("Auto Situp toggle changed:", Options.AutoSitup.Value)
+    -- Add your situp equip logic here
+end)
+
+Options.AutoSitup:SetValue(false)
+
+local ToggleWeight = Tabs.Main:CreateToggle("AutoWeight", {Title = "Auto Equip: Weight", Default = false})
+
+ToggleWeight:OnChanged(function()
+    print("Auto Weight toggle changed:", Options.AutoWeight.Value)
+    -- Add your weight equip logic here
+end)
+
+Options.AutoWeight:SetValue(false)
+
 local LanguageInfo = Tabs.Status:CreateParagraph("LanguageInfo", {
     Title = "Language",
     Content = [[
